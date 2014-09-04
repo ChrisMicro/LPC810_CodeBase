@@ -1,5 +1,6 @@
-LPC810_CodeBase
-===============
+
+LPC810_CodeBase providing some basic Arduino functions
+======================================================
 
 Open source code base for the ARM Cortex M0+ LPC810 family from NXP.
 
