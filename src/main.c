@@ -6,7 +6,12 @@
 
     Software License Agreement (BSD License)
 
+    original version:
     Copyright (c) 2013, K. Townsend (microBuilder.eu)
+
+    some basic Arduino functions introduced
+    Copyright (c) 2014, ChrisMicro (https://github.com/ChrisMicro)
+
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -93,6 +98,47 @@ void configurePins()
   #endif  
 }
 
+#define OUTPUT 1
+#define LOW 0
+#define HIGH 1
+
+void pinMode(uint8_t pin, uint8_t mode)
+{
+	// check if it is Arduino Uno LED pin
+	if(pin==13)
+	{
+	    if(mode==OUTPUT) LPC_GPIO_PORT->DIR0 |= (1 << LED_LOCATION);
+	}
+}
+void digitalWrite(uint8_t pin, uint8_t value)
+{
+	// check if it is Arduino uno LED pin
+	if(pin==13)
+	{
+		if(value==1) LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
+		else LPC_GPIO_PORT->CLR0 = 1 << LED_LOCATION;
+	}
+}
+
+void delay(uint32_t milliSeconds)
+{
+	mrtDelay(milliSeconds);
+}
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  // initialize digital pin 13 as an output.
+  pinMode(13, OUTPUT);
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(500);              // wait for a second
+  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
+  delay(500);              // wait for a second
+}
+
 int main(void)
 {
   /* Initialise the GPIO block */
@@ -112,22 +158,31 @@ int main(void)
     LPC_GPIO_PORT->DIR0 |= (1 << LED_LOCATION);
   #endif
 
+  setup();
+  while(1) loop();
+  /*
   while(1)
   {
+	  int n;
     #if !defined(USE_SWD)
-      /* Turn LED Off by setting the GPIO pin high */
-      LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
-      mrtDelay(500);
+      // Turn LED Off by setting the GPIO pin high
+	  for(n=0;n<100;n++)
+	  {
+		  LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
+		  mrtDelay(1);
+		  LPC_GPIO_PORT->CLR0 = 1 << LED_LOCATION;
+		  mrtDelay(1);
+	  }
 
-      /* Turn LED On by setting the GPIO pin low */
-      LPC_GPIO_PORT->CLR0 = 1 << LED_LOCATION;
-      mrtDelay(500);
+      //Turn LED Off by setting the GPIO pin high
+      LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
+      mrtDelay(2000);
     #else
-      /* Just insert a 1 second delay */
+      // Just insert a 1 second delay
       mrtDelay(1000);
     #endif
 
-    /* Send some text (printf is redirected to UART0) */
-    printf("Hello, LPC810!\n\r");
-  }
+    // Send some text (printf is redirected to UART0)
+    printf("LPC810 reprogrammed \n\r");
+  }*/
 }
