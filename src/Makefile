@@ -12,7 +12,10 @@ FPU = # -mfloat-abi=soft
 FILENAME = blinky
 LINKERSCRIPT = blinky.ld
 
-CFLAGS+= -Os --specs=nano.specs -ffunction-sections -fdata-sections -fno-builtin
+#CFLAGS+= -Os --specs=nano.specs -ffunction-sections -fdata-sections -fno-builtin
+# --specs=nano.specs not working on Ubuntu 12.04
+# therefore I removed it
+CFLAGS+= -Os -ffunction-sections -fdata-sections -fno-builtin
 
 CC = ${CROSS}gcc
 LD = ${CROSS}ld
