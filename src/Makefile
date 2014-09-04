@@ -41,7 +41,9 @@ BLINKY_OBJS = main.o \
               printf.o \
               printf-retarget.o \
               system_LPC8xx.o \
-              gcc_startup_lpc8xx.o
+              gcc_startup_lpc8xx.o \
+              arduino.o \
+              sketch_ino.o
 
 all: $(FILENAME).bin
 

@@ -42,14 +42,14 @@
 #include "gpio.h"
 #include "mrt.h"
 #include "uart.h"
+//#include "arduino.h"
+#include "sketch_ino.h"
 
 #if defined(__CODE_RED)
   #include <cr_section_macros.h>
   #include <NXP/crp.h>
   __CRP const unsigned int CRP_WORD = CRP_NO_CRP ;
 #endif
-
-#define LED_LOCATION    (2)
 
 /* This define should be enabled if you want to      */
 /* maintain an SWD/debug connection to the LPC810,   */
@@ -98,46 +98,7 @@ void configurePins()
   #endif  
 }
 
-#define OUTPUT 1
-#define LOW 0
-#define HIGH 1
 
-void pinMode(uint8_t pin, uint8_t mode)
-{
-	// check if it is Arduino Uno LED pin
-	if(pin==13)
-	{
-	    if(mode==OUTPUT) LPC_GPIO_PORT->DIR0 |= (1 << LED_LOCATION);
-	}
-}
-void digitalWrite(uint8_t pin, uint8_t value)
-{
-	// check if it is Arduino uno LED pin
-	if(pin==13)
-	{
-		if(value==1) LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
-		else LPC_GPIO_PORT->CLR0 = 1 << LED_LOCATION;
-	}
-}
-
-void delay(uint32_t milliSeconds)
-{
-	mrtDelay(milliSeconds);
-}
-
-// the setup function runs once when you press reset or power the board
-void setup() {
-  // initialize digital pin 13 as an output.
-  pinMode(13, OUTPUT);
-}
-
-// the loop function runs over and over again forever
-void loop() {
-  digitalWrite(13, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(500);              // wait for a second
-  digitalWrite(13, LOW);    // turn the LED off by making the voltage LOW
-  delay(500);              // wait for a second
-}
 
 int main(void)
 {
@@ -155,7 +116,7 @@ int main(void)
 
   /* Set the LED pin to output (1 = output, 0 = input) */
   #if !defined(USE_SWD)
-    LPC_GPIO_PORT->DIR0 |= (1 << LED_LOCATION);
+//    LPC_GPIO_PORT->DIR0 |= (1 << LED_LOCATION);
   #endif
 
   setup();

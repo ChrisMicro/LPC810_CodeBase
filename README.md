@@ -2,6 +2,17 @@
 LPC810_CodeBase providing some basic Arduino functions
 ======================================================
 
+The Arduino Sketch should be place in the file
+
+sketch_ino.c
+
+It is important that the first line in this file is
+
+#include "sketch_ino.h"
+
+
+
+
 Open source code base for the ARM Cortex M0+ LPC810 family from NXP.
 
 This code base is intended to work with the LPC810 in a DIP8 package.  While these drivers are based on the original LPC800 example code from NXP, the LPC810 has limited resources (4KB flash and 1KB SRAM), so smaller, lighter-weight drivers had to be written to get the most out of these resources we have.
