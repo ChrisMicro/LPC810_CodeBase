@@ -10,7 +10,7 @@ It is important that the first line in this file is
 
 #include "sketch_ino.h"
 
-
+How to install the ARM Tool chain on Ubuntu 12.04 : https://launchpad.net/~terry.guo/+archive/ubuntu/gcc-arm-embedded
 
 
 Open source code base for the ARM Cortex M0+ LPC810 family from NXP.
