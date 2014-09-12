@@ -10,39 +10,17 @@
     Copyright (c) 2013, K. Townsend (microBuilder.eu)
 
     some basic Arduino functions introduced
+
     Copyright (c) 2014, ChrisMicro (https://github.com/ChrisMicro)
 
     All rights reserved.
 
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are met:
-    1. Redistributions of source code must retain the above copyright
-    notice, this list of conditions and the following disclaimer.
-    2. Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions and the following disclaimer in the
-    documentation and/or other materials provided with the distribution.
-    3. Neither the name of the copyright holders nor the
-    names of its contributors may be used to endorse or promote products
-    derived from this software without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ''AS IS'' AND ANY
-    EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
-    DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-    ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/**************************************************************************/
+*************************************************************************/
 #include <stdio.h>
 #include "LPC8xx.h"
 #include "gpio.h"
 #include "mrt.h"
 #include "uart.h"
-//#include "arduino.h"
 #include "sketch_ino.h"
 
 #if defined(__CODE_RED)
@@ -106,7 +84,7 @@ int main(void)
   gpioInit();
 
   /* Initialise the UART0 block for printf output */
-  uart0Init(115200);
+  //uart0Init(115200);
 
   /* Configure the multi-rate timer for 1ms ticks */
   mrtInit(__SYSTEM_CLOCK/1000);
@@ -121,29 +99,30 @@ int main(void)
 
   setup();
   while(1) loop();
-  /*
-  while(1)
-  {
-	  int n;
-    #if !defined(USE_SWD)
-      // Turn LED Off by setting the GPIO pin high
-	  for(n=0;n<100;n++)
-	  {
-		  LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
-		  mrtDelay(1);
-		  LPC_GPIO_PORT->CLR0 = 1 << LED_LOCATION;
-		  mrtDelay(1);
-	  }
 
-      //Turn LED Off by setting the GPIO pin high
-      LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
-      mrtDelay(2000);
-    #else
-      // Just insert a 1 second delay
-      mrtDelay(1000);
-    #endif
-
-    // Send some text (printf is redirected to UART0)
-    printf("LPC810 reprogrammed \n\r");
-  }*/
 }
+/******************************************************************************
+ *
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+3. Neither the name of the copyright holders nor the
+names of its contributors may be used to endorse or promote products
+derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ''AS IS'' AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+/**************************************************************************/
