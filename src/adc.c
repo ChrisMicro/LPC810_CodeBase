@@ -11,6 +11,7 @@
 /**************************************************************************/
 #include "LPC8xx.h"
 #include "adc.h"
+#include "mrt.h"
 
 uint16_t read_adc2();
 
@@ -26,9 +27,6 @@ void init_adc(uint8_t channel)
 	 // Initialize the comparator ICMP_2
 	 LPC_SYSCON->PDRUNCFG &= ~((1 << 15)); // power up ACMP
 
-	 // MRT3 (halt_clk) bus stall mode , no interrupts
-
-	 LPC_MRT->Channel[3].CTRL = (0x02 << 1);
 }
 
 uint16_t read_adc(uint8_t channel)
@@ -45,39 +43,50 @@ uint16_t read_adc(uint8_t channel)
  *
  * LICENSE: unclear
  *
- *
  * */
-#define halt_clk(c) LPC_MRT->Channel[3].INTVAL = (c*3-3)
 
-uint16_t read_adc2() {
- int min = 0, max = 63, value = 31, count, compstat, laststat;
- LPC_CMP->CTRL = (0x2 << 8) | (0x3 << 25); /* positive input ACMP0_I2 , negative input voltage ladder , 20mV hysteresis */
- while (!((value == min) || (value == max))) {
-  count = 0;
-  LPC_CMP->LAD = 1 | (value); /* ladder Enable | Vref=Vdd | value */
-  halt_clk(12 * 15); /* 15us worst case for ladder to settle */
-  laststat = (LPC_CMP->CTRL >> 21) & 1;
-  /* wait till reading is the same 3 times in row */
-  do {
-   halt_clk(6); /* wait 0.5us */
-   compstat = (LPC_CMP->CTRL >> 21) & 1;
-   if (compstat == laststat)
-    count++;
-   else
-    count = 0;
-   laststat = compstat;
-  } while (count < 3);
-  /* Binary divide */
-  if (compstat) {
-   min = value;
-   value = value + ((max - value) >> 1);
-  } else {
-   max = value;
-   value = value - ((value - min) >> 1);
-  }
- }
- return value >> 1;
+uint16_t read_adc2()
+{
+	int min = 0, max = 63, value = 31, count, compstat, laststat;
+
+	LPC_CMP->CTRL = (0x2 << 8) | (0x3 << 25); /* positive input ACMP0_I2 , negative input voltage ladder , 20mV hysteresis */
+
+	while (!((value == min) || (value == max)))
+	{
+		  count = 0;
+		  LPC_CMP->LAD = 1 | (value); /* ladder Enable | Vref=Vdd | value */
+
+		  delayMicroseconds(15); // 15us worst case for ladder to settle
+
+		  laststat = (LPC_CMP->CTRL >> 21) & 1;
+
+		  // wait till reading is the same 3 times in row
+		  do
+		  {
+			  delayMicroseconds(1); // minimum wait time: 0.5us
+
+			  compstat = (LPC_CMP->CTRL >> 21) & 1;
+			  if (compstat == laststat)
+				   count++;
+			  else
+				   count = 0;
+			  laststat = compstat;
+		  } while (count < 3);
+
+		  // Binary divide
+		  if (compstat)
+		  {
+			   min = value;
+			   value = value + ((max - value) >> 1);
+		  } else
+		  {
+			   max = value;
+			   value = value - ((value - min) >> 1);
+		  }
+	}
+	return value >> 1;
 }
+
 /***********************************************************************************
 
     Software License Agreement (BSD License)
