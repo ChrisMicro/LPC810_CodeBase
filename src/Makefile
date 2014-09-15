@@ -16,6 +16,8 @@ LINKERSCRIPT = blinky.ld
 # --specs=nano.specs not working on Ubuntu 12.04
 # therefore I removed it
 CFLAGS+= -Os -ffunction-sections -fdata-sections -fno-builtin
+# show assembler lst
+# CFLAGS+= -c -g -Wa,-a,-ad -Os -ffunction-sections -fdata-sections -fno-builtin
 
 CC = ${CROSS}gcc
 LD = ${CROSS}ld
@@ -39,6 +41,7 @@ BLINKY_OBJS = main.o \
               uart.o \
               mrt.o \
               adc.o \
+              sct.o \
               printf.o \
               printf-retarget.o \
               system_LPC8xx.o \

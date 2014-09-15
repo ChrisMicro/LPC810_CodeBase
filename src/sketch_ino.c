@@ -7,10 +7,10 @@
      =======================================
                       ________
                       |   U   |
-          reset      -|       |- digital 0 / analog in 0 / RX
+          reset      -|       |- digital 0 / analog in A0 / RX
      TX / digital 4  -|  LPC  |- GND
           digital 3  -|  810  |- +3.3V
-          digital 2  -|       |- digital 1 / analog in 1
+          digital 2  -|       |- digital 1 / analog in A1
                       |_______|
 
 
@@ -36,15 +36,28 @@ void setup() {
   Serial_println("I'm LPC810");
 }
 
+int sensorValue = 0;        // value read from the pot
+const int analogInPin = A1;  // Analog input pin that the potentiometer is attached to
+int outputValue = 0;        // value output to the PWM (analog out)
+
 // the loop function runs over and over again forever
 void loop() {
+
   digitalWrite(ledPin, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(100);              		// wait for 00ms
   digitalWrite(ledPin, LOW);    // turn the LED off by making the voltage LOW
   delay(100);              		// wait for 100ms
+
+  // read the analog in value:
+  sensorValue = analogRead(analogInPin);
+  // map it to the range of the analog out:
+  outputValue = map(sensorValue, 0, 31, 0, 3300);
   Serial_print("ms time: ");
   Serial_printnumber(millis());
   Serial_print("ADC: ");
-  Serial_printnumber(analogRead(1));
-  Serial_println("");
+  Serial_printnumber(outputValue);
+  Serial_println("mV ");
+  static int k=0;
+  analogWrite(3, k++);
+
 }
