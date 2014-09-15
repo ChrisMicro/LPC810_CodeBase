@@ -21,6 +21,11 @@
 #include "LPC8xx.h"
 #include "mrt.h"
 
+// from http://blog.nano-age.co.uk/2014/08/microsecond-delays-using-lpc810s-multi.html
+// MRT3 (halt_clk) bus stall mode , no interrupts
+#define INIT_US_TIMER { LPC_MRT->Channel[3].CTRL |= (0x02 << 1);}
+#define halt_clk(c) LPC_MRT->Channel[3].INTVAL = (c*3-3)
+
 volatile uint32_t mrt_counter = 0;
 
 void MRT_IRQHandler(void)
@@ -36,9 +41,9 @@ void MRT_IRQHandler(void)
 void mrtInit(uint32_t delay)
 {
   /* Enable clock to MRT and reset the MRT peripheral */
-  LPC_SYSCON->SYSAHBCLKCTRL |= (0x1<<10);
-  LPC_SYSCON->PRESETCTRL &= ~(0x1<<7);
-  LPC_SYSCON->PRESETCTRL |= (0x1<<7);
+  LPC_SYSCON->SYSAHBCLKCTRL |=  (0x1<<10);
+  LPC_SYSCON->PRESETCTRL    &= ~(0x1<<7);
+  LPC_SYSCON->PRESETCTRL    |=  (0x1<<7);
 
   mrt_counter = 0;
   LPC_MRT->Channel[0].INTVAL = delay;
@@ -53,6 +58,8 @@ void mrtInit(uint32_t delay)
 #else
   NVIC_EnableIRQ(MRT_IRQn);
 #endif
+
+  INIT_US_TIMER;
   return;
 }
 
@@ -66,9 +73,15 @@ uint32_t millis()
 {
 	return mrt_counter;
 }
+
 uint32_t micros()
 {
 	return mrt_counter*1000; // tbd: change timer resolution
+}
+
+inline void delayMicroseconds(uint32_t us)
+{
+	halt_clk(us);
 }
 /******************************************************************************
  *
