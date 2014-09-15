@@ -64,12 +64,7 @@ int digitalRead(uint8_t pin)
 	}
 	return result;
 }
-/*
-void delay(uint32_t milliSeconds)
-{
-	mrtDelay(milliSeconds);
-}
-*/
+
 /*
  * from wiring.c
  * https://code.google.com/p/arduino/source/browse/trunk/hardware/arduino/cores/arduino/wiring.c
@@ -91,6 +86,13 @@ void delay(unsigned long ms)
 		}
 	}
 }
+// https://code.google.com/p/arduino/source/browse/trunk/hardware/arduino/cores/arduino/WMath.cpp
+int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max)
+{
+  int32_t value=(x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  return value;
+}
+
 /*
  * The syntax for real Arduinos would be
  * Serial.begin(9600);
@@ -133,9 +135,19 @@ uint16_t analogRead(uint8_t channel )
 		initFlags|=1<<channel;
 	}
 
-	return 	read_adc(channel);;
+	return 	read_adc(channel);
 }
+void analogWrite(uint8_t analogOutPin, uint16_t value)
+{
+	static uint8_t initFlags=0;
 
+	if((initFlags&(1<<analogOutPin))==0)
+	{
+		init_sct(analogOutPin);
+		initFlags|=1<<analogOutPin;
+	}
+	setPwm(analogOutPin,value);
+}
 /******************************************************************************
 
 	Redistribution and use in source and binary forms, with or without
