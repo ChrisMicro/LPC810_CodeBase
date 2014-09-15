@@ -21,7 +21,8 @@ void init_sct(uint8_t channel)
 
 	// connect SCT OUTP_0 to IO-PIN
 	LPC_SWM->PINASSIGN6 &=0x00FFFFFF;
-	LPC_SWM->PINASSIGN6 |=3<<24; // SCT OUTP_0 at P0.3
+	//LPC_SWM->PINASSIGN6 |=3<<24; // SCT OUTP_0 at P0.3
+	LPC_SWM->PINASSIGN6 |=channel<<24; // SCT OUTP_0 at P0.3
 
 	LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 8); // enable the SCT clock
 	sct_fsm_init(); // Initialize SCT
@@ -51,13 +52,13 @@ void sct_fsm_init (void)
 	/* MATCH/CAPTURE registers */
 	LPC_SCT->REGMODE_L = 0x0000;         /* L: 2x MATCH, 0x CAPTURE, 3 unused */
 	LPC_SCT->REGMODE_H = 0x0000;             /* H: 0x MATCH, 0x CAPTURE, 5 unused */
-	LPC_SCT->MATCH_L[0] = MATCH_PERIOD;             /* MATCH0 */
+	LPC_SCT->MATCH_L[0] = MATCH_PERIOD;           // initial default value MATCH0
 	LPC_SCT->MATCHREL_L[0] = MATCH_PERIOD;
-	LPC_SCT->MATCH_L[1] = MATCH_DUTY;             /* MATCH1 */
+	LPC_SCT->MATCH_L[1] = MATCH_DUTY;             // initial default value
 	LPC_SCT->MATCHREL_L[1] = MATCH_DUTY;
 
 	/* OUTPUT registers */
-	LPC_SCT->OUT[0].SET = 0x00000001;        /* Output_pin_0 */
+	LPC_SCT->OUT[0].SET = 0x00000001;
 	LPC_SCT->OUT[0].CLR = 0x00000002;
 	  /* Unused outputs must not be affected by any event */
 	LPC_SCT->OUT[1].SET = 0;
