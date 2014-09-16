@@ -24,7 +24,7 @@
 // from http://blog.nano-age.co.uk/2014/08/microsecond-delays-using-lpc810s-multi.html
 // MRT3 (halt_clk) bus stall mode , no interrupts
 #define INIT_US_TIMER { LPC_MRT->Channel[3].CTRL |= (0x02 << 1);}
-#define halt_clk(c) LPC_MRT->Channel[3].INTVAL = (c*3-3)
+#define halt_clk(c) LPC_MRT->Channel[3].INTVAL = (c-3)
 
 volatile uint32_t mrt_counter = 0;
 
@@ -81,7 +81,7 @@ uint32_t micros()
 
 inline void delayMicroseconds(uint32_t us)
 {
-	halt_clk(us);
+	halt_clk(us*30); // us delay for 30MHz clk
 }
 /******************************************************************************
  *
