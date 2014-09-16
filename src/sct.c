@@ -26,6 +26,10 @@ void init_sct(uint8_t channel)
 
 	LPC_SYSCON->SYSAHBCLKCTRL |= (1 << 8); // enable the SCT clock
 	sct_fsm_init(); // Initialize SCT
+#if 0
+	LPC_SCT->EVEN = (1 << 0);    // enable EVENT0 interrupt
+	NVIC_EnableIRQ(SCT_IRQn); // enable SCT interrupt
+#endif
 	LPC_SCT->CTRL_L &= ~(1<<2); // start the SCT by clearing bit 2 in CTRL
 }
 
@@ -33,6 +37,22 @@ void setPwm(uint8_t channel,uint16_t value)
 {
 	LPC_SCT->MATCHREL[1].L=value;
 }
+
+volatile uint16_t value=100;
+void SCT_IRQHandler(void)
+{
+	uint32_t status = LPC_SCT->EVFLAG;
+
+	//LPC_GPIO_PORT->NOT0 = 1 << 3;
+
+	LPC_SCT->MATCHREL[1].L=value++;
+	if(value>800)value=100;
+
+	// Acknowledge interrupts
+	LPC_SCT->EVFLAG = status;
+  return;
+}
+
 /*
  * from LPC800 SCT Cookbook and Tutorial
  * http://www.lpcware.com/content/nxpfile/lpc80-sct-cookbook-and-tutorial-code-examples
