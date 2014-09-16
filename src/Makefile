@@ -42,6 +42,7 @@ BLINKY_OBJS = main.o \
               mrt.o \
               adc.o \
               sct.o \
+              tone.o \
               printf.o \
               printf-retarget.o \
               system_LPC8xx.o \

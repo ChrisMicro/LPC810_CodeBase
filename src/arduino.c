@@ -30,29 +30,18 @@
 
 void pinMode(uint8_t pin, uint8_t mode)
 {
-	// check if it is Arduino Uno LED pin
-	if(pin==13)
-	{
-	    if(mode==OUTPUT) LPC_GPIO_PORT->DIR0 |= (1 << LED_LOCATION);
-	    else LPC_GPIO_PORT->DIR0 &= ~(1 << LED_LOCATION);
-	}else
-	{
 		if(mode==OUTPUT) LPC_GPIO_PORT->DIR0 |= (1 << pin);
 		else LPC_GPIO_PORT->DIR0 &= ~(1 << pin);
-	}
 }
 void digitalWrite(uint8_t pin, uint8_t value)
 {
-	// check if it is Arduino uno LED pin
-	if(pin==13)
-	{
-		if(value==1) LPC_GPIO_PORT->SET0 = 1 << LED_LOCATION;
-		else LPC_GPIO_PORT->CLR0 = 1 << LED_LOCATION;
-	}else
-	{
 		if(value==1) LPC_GPIO_PORT->SET0 = 1 << pin;
 		else LPC_GPIO_PORT->CLR0 = 1 << pin;
-	}
+}
+
+void digitalToggle(uint8_t pin)
+{
+	LPC_GPIO_PORT->NOT0 = 1 << pin;
 }
 
 int digitalRead(uint8_t pin)

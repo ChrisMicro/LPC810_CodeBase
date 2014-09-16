@@ -16,6 +16,7 @@
 
 void pinMode(uint8_t pin, uint8_t mode);
 void digitalWrite(uint8_t pin, uint8_t value);
+void digitalToggle(uint8_t Pin);
 int digitalRead(uint8_t pin);
 void delay(uint32_t milliSeconds);
 void Serial_begin(uint32_t baudRate);
