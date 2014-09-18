@@ -16,6 +16,20 @@
 
  modified and addeptet by ChrisMicro 2014 for LPC810
 
+     LPC800 Pining ( Arduino pin numbering )
+     =======================================
+                      ________
+                      |   U   |
+          reset      -|       |- digital 0 / analog in A0 / RX
+     TX / digital 4  -|  LPC  |- GND
+          digital 3  -|  810  |- +3.3V
+          digital 2  -|       |- digital 1 / analog in A1
+                      |_______|
+
+
+     Mini Kit Board ( http://www.lpcware.com/lpc800-mini-kit )
+     =========================================================
+
                       _________
                       |   U   |
         reset switch -|       |-
