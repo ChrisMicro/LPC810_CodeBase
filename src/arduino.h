@@ -18,12 +18,13 @@ void pinMode(uint8_t pin, uint8_t mode);
 void digitalWrite(uint8_t pin, uint8_t value);
 void digitalToggle(uint8_t Pin);
 int digitalRead(uint8_t pin);
-void delay(uint32_t milliSeconds);
 void Serial_begin(uint32_t baudRate);
 void Serial_print(char * string);
 void Serial_println(char * string);
 void Serial_printnumber(uint32_t number);
 uint32_t millis();
+void delay(unsigned long ms);
 uint16_t analogRead(uint8_t channel );
+void analogWrite(uint8_t analogOutPin, uint16_t value);
 int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max);
 
