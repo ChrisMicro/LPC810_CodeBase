@@ -13,14 +13,24 @@
 # 2013-Jul-25 Lars Ole Belhage, belhage@midibel.com
 # A simple script to program a LPC810 via ISP serial interface
 # It also calculates the signature and that checks code-read-protection is off
+#
+# sleep time implemented to give the LPC some time to go into ISP mode
+# ChrisMicro, Sep.2014
 
 import sys
 import serial
+import time
 
 tty = sys.argv[1] if len(sys.argv) > 1 else "/dev/ttyUSB0"
 flsh = sys.argv[2] if len(sys.argv) > 2 else ""
 
 ser = serial.Serial(tty, baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=10, xonxoff=0, rtscts=0)
+
+# sleep time implemented to give the LPC some time to go into ISP mode
+# ChrisMicro, Sep.2014
+print "wait for ISP mode"
+time.sleep(1)
+print "start programming"
 
 def sendCmd(cmd):
 	ser.write(cmd)
