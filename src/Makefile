@@ -15,7 +15,7 @@ LINKERSCRIPT = blinky.ld
 #CFLAGS+= -Os --specs=nano.specs -ffunction-sections -fdata-sections -fno-builtin
 # --specs=nano.specs not working on Ubuntu 12.04
 # therefore I removed it
-CFLAGS+= -Os -ffunction-sections -fdata-sections -fno-builtin
+CFLAGS+= -Os -ffunction-sections -fdata-sections -fno-builtin -std=c99 -std=gnu99 
 # show assembler lst
 # CFLAGS+= -c -g -Wa,-a,-ad -Os -ffunction-sections -fdata-sections -fno-builtin
 
