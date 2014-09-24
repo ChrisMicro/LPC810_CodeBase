@@ -14,7 +14,7 @@
 
 */
 
-int analogOutPin=2;
+int analogOutPin=3;
 
 void setup() {
   // initialize the digital pin as an output.
@@ -79,7 +79,7 @@ void loop()
                       |   U   |
         reset switch -|       |- RX
                   TX -|  LPC  |- GND
-                     -|  810  |- +3.3V
+             speaker -|  810  |- +3.3V
             test led -|       |- ISP switch
                       |_______|
 
