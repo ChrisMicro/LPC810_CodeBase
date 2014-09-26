@@ -43,7 +43,7 @@ void setup() {
 }
 
 int32_t integrator=0;
-int32_t sollwert=64;
+int32_t dacValue=64;
 int32_t oldValue=0;
 uint16_t phase=0;
 uint16_t phaseDelta=200*49;
@@ -55,7 +55,7 @@ uint16_t n;
 void loop() {
 
   // sin wave DDS ( direct digital synthesis )
-  sollwert=128+sintab[phase>>8];
+  dacValue=128+sintab[phase>>8];
   phase+=phaseDelta;
   #ifdef CHIRP
     phaseDelta++;
@@ -64,7 +64,7 @@ void loop() {
   // sigma delta DAC, hold the DAC value for n-steps constant
   for(n=0;n<NSTEPLOOP;n++)
   {
-    integrator+=sollwert-oldValue;
+    integrator+=dacValue-oldValue;
     if(integrator>0)
     {
       oldValue=MAXDACVALUE;
