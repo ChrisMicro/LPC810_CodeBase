@@ -2,11 +2,11 @@
 /*
   sigma delta modulator experiments
 
-  generate an audio chirp signal on Arduino LED output
+  generate a pseudo analog sine wave on a digital pin output
+  with the sigmal delta principle
 
-  14.4.2013 ch alias ChrisMicro
-
-  generate an audio signal on analog output
+  14.4.2013 initial version, ch alias ChrisMicro
+  26.9.2014 modified for LPC810, ChrisMicro
 
   created 2013
   by ChrisMicro
@@ -16,8 +16,15 @@
   for more sigma delta examples see
   http://hobby-roboter.de/forum/viewtopic.php?f=5&t=141
 
+  hardware:
+  connect a low pass filter to the speaker output pin.
+  low pass:  470Ohm, 100nF
+  or 470Ohm, 10nF for lower impedance
+
 */
 //#define CHIRP // uncomment this line to get a chirp signal
+int speakerPin=3;
+int ledPin=2;
 
 int8_t sintab[256]=
 {
@@ -33,48 +40,52 @@ int8_t sintab[256]=
   -70 ,-67 ,-65 ,-62 ,-59 ,-57 ,-54 ,-51 ,-48 ,-45 ,-42 ,-39 ,-36 ,-33 ,-30 ,-27 ,-24 ,-21 ,-18 ,-15 ,-12 ,-9 ,-6 ,-3
 };
 
-
-int analogOutPin=3;
-int ledPin=2;
-
 void setup() {
   // initialize the digital pin as an output.
-  pinMode(analogOutPin, OUTPUT);
+  pinMode(speakerPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
 }
 
 int32_t integrator=0;
-int32_t sollwert=64;
+int32_t dacValue=64;
 int32_t oldValue=0;
 uint16_t phase=0;
 uint16_t phaseDelta=200*49;
 uint16_t n;
 
-#define MAXDACVALUE 255
-#define NSTEPLOOP 200
+// the DAC input range goes from
+#define MINDACVALUE -128
+// to
+#define MAXDACVALUE 127
+// the DAC value is scaled to the microcontroller
+// digital output voltage e.g. from 0 to 3.3 V
+
+#define NSTEPS_TIL_DAC_UPDATE 200
 
 void loop() {
 
   // sin wave DDS ( direct digital synthesis )
-  sollwert=128+sintab[phase>>8];
+  dacValue=sintab[phase>>8];
   phase+=phaseDelta;
+
   #ifdef CHIRP
     phaseDelta++;
   #endif
 
   // sigma delta DAC, hold the DAC value for n-steps constant
-  for(n=0;n<NSTEPLOOP;n++)
+  // and do sigma delta
+  for(n=0;n<NSTEPS_TIL_DAC_UPDATE;n++)
   {
-    integrator+=sollwert-oldValue;
+    integrator+=dacValue-oldValue; // sigma+=delta
     if(integrator>0)
     {
+      digitalWrite(speakerPin, HIGH);
       oldValue=MAXDACVALUE;
-      digitalWrite(analogOutPin, HIGH);   // set the LED on
     }
     else
     {
-      oldValue=0;
-      digitalWrite(analogOutPin, LOW);    // set the LED off
+      digitalWrite(speakerPin, LOW);
+      oldValue=MINDACVALUE;
     }
   }
 }
