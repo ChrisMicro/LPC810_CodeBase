@@ -2,7 +2,8 @@
 /*
   sigma delta modulator experiments
 
-  generate an audio chirp signal on Arduino LED output
+  generate a pseudo analog sine wave on a digital pin output
+  with the sigmal delta principle
 
   14.4.2013 ch alias ChrisMicro
 
@@ -18,6 +19,8 @@
 
 */
 //#define CHIRP // uncomment this line to get a chirp signal
+int speakerPin=3;
+int ledPin=2;
 
 int8_t sintab[256]=
 {
@@ -33,13 +36,9 @@ int8_t sintab[256]=
   -70 ,-67 ,-65 ,-62 ,-59 ,-57 ,-54 ,-51 ,-48 ,-45 ,-42 ,-39 ,-36 ,-33 ,-30 ,-27 ,-24 ,-21 ,-18 ,-15 ,-12 ,-9 ,-6 ,-3
 };
 
-
-int analogOutPin=3;
-int ledPin=2;
-
 void setup() {
   // initialize the digital pin as an output.
-  pinMode(analogOutPin, OUTPUT);
+  pinMode(speakerPin, OUTPUT);
   pinMode(ledPin, OUTPUT);
 }
 
@@ -69,12 +68,12 @@ void loop() {
     if(integrator>0)
     {
       oldValue=MAXDACVALUE;
-      digitalWrite(analogOutPin, HIGH);   // set the LED on
+      digitalWrite(speakerPin, HIGH);   // set the LED on
     }
     else
     {
       oldValue=0;
-      digitalWrite(analogOutPin, LOW);    // set the LED off
+      digitalWrite(speakerPin, LOW);    // set the LED off
     }
   }
 }
